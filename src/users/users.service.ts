@@ -4,11 +4,12 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import type { Repository } from 'typeorm';
-import type { User } from '../entities/user.entity'; // Import User entity
-import type { CreateUserDto } from './dto/create-user.dto';
+
 import type { UserResponseDto } from './dto/user-response.dto';
 import * as bcrypt from 'bcrypt';
 import { PostgresErrorCode } from '../common/constants/postgres-error-codes.enum';
+import { User } from './entities/user.entity';
+import { CreateUserDTO } from './dto/create-user.dto';
 
 @Injectable()
 export class UsersService {
@@ -20,7 +21,7 @@ export class UsersService {
 
   async create(
     tenantId: string,
-    createUserDto: CreateUserDto,
+    createUserDto: CreateUserDTO,
   ): Promise<UserResponseDto> {
     const { email, password, firstName, lastName } = createUserDto;
     const passwordHash = await bcrypt.hash(password, 10);

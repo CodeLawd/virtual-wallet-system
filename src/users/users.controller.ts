@@ -1,17 +1,5 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-  UseGuards,
-  HttpStatus,
-} from '@nestjs/common';
+import { Controller, Get, UseGuards, HttpStatus } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
 import {
   ApiBearerAuth,
   ApiOperation,
@@ -20,10 +8,20 @@ import {
 } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/passport/jwt-auth.guard';
 import { UserResponseDto } from './dto/user-response.dto';
+import { Tenant } from 'src/common/decorators/tenant.decorator';
+import { Request } from 'express';
+
+interface AuthenticatedRequest extends Request {
+  user: {
+    userId: string;
+    tenantId: string;
+    email: string;
+  };
+}
 
 @ApiTags('Users')
-@ApiBearerAuth('access-token') // Document JWT authentication
-@UseGuards(JwtAuthGuard) // Protect all routes in this controller with JWT
+@ApiBearerAuth('access-token')
+@UseGuards(JwtAuthGuard)
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
@@ -40,10 +38,9 @@ export class UsersController {
     description: 'Unauthorized.',
   })
   async getMe(
-    req: Request,
+    req: AuthenticatedRequest,
     @Tenant() tenantId: string,
   ): Promise<UserResponseDto> {
-    // req.user is populated by JwtAuthGuard
     return this.usersService.findByIdAndTenantId(req.user.userId, tenantId);
   }
 }

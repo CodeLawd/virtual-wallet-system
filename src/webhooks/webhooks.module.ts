@@ -1,12 +1,11 @@
-import { Module } from "@nestjs/common"
-import { WebhooksService } from "./webhooks.service"
-import { WebhooksController } from "./webhooks.controller"
-import { TransactionsModule } from "../transactions/transactions.module"
-import { PaymentProvidersModule } from "../payment-providers/payment-providers.module"
-import { TenantsModule } from "../tenants/tenants.module"
-import { TypeOrmModule } from "@nestjs/typeorm"
-import { WebhookEvent } from "../entities/webhook-event.entity"
-import { QueueModule } from "../queue/queue.module" // Import QueueModule
+import { Module } from '@nestjs/common';
+import { WebhooksService } from './webhooks.service';
+import { WebhooksController } from './webhooks.controller';
+import { TransactionsModule } from '../transactions/transactions.module';
+import { PaymentProvidersModule } from '../payment-providers/payment-providers.module';
+import { TenantsModule } from '../tenants/tenants.module';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { WebhookEvent } from './entity/webhook-event.entity';
 
 @Module({
   imports: [
@@ -14,7 +13,7 @@ import { QueueModule } from "../queue/queue.module" // Import QueueModule
     TransactionsModule,
     PaymentProvidersModule,
     TenantsModule,
-    QueueModule, // Import QueueModule to use QueueService
+    // QueueModule,
   ],
   controllers: [WebhooksController],
   providers: [WebhooksService],

@@ -7,10 +7,10 @@ import {
   Index,
   CreateDateColumn,
   UpdateDateColumn,
-  Transaction,
 } from 'typeorm';
 import { User } from 'src/users/entities/user.entity';
 import { Tenant } from 'src/tenants/entities/tenant.entity';
+import { Transaction } from 'src/transactions/entities/transaction.entity';
 
 @Entity('wallets')
 @Index(['userId', 'currency'], { unique: true }) // A user can only have one wallet per currency

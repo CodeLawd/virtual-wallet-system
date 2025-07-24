@@ -1,4 +1,5 @@
 import { TransactionStatus, TransactionType } from 'src/common/enums';
+import { IdempotencyKey } from 'src/idempotency/entity/idempotency-key.entity';
 import { Tenant } from 'src/tenants/entities/tenant.entity';
 import { Wallet } from 'src/wallets/entities/wallet.entity';
 import { WebhookEvent } from 'src/webhooks/entity/webhook-event.entity';

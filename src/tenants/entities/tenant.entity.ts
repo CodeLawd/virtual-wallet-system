@@ -5,10 +5,12 @@ import {
   OneToMany,
   CreateDateColumn,
   UpdateDateColumn,
-  Transaction,
 } from 'typeorm';
 import { User } from 'src/users/entities/user.entity';
 import { Wallet } from 'src/wallets/entities/wallet.entity';
+import { WebhookEvent } from 'src/webhooks/entity/webhook-event.entity';
+import { IdempotencyKey } from 'src/idempotency/entity/idempotency-key.entity';
+import { Transaction } from 'src/transactions/entities/transaction.entity';
 
 @Entity('tenants')
 export class Tenant {
