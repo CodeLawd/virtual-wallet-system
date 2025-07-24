@@ -1,26 +1,90 @@
-import { Injectable } from '@nestjs/common';
-import { CreateAuthDto } from './dto/create-auth.dto';
-import { UpdateAuthDto } from './dto/update-auth.dto';
+import {
+  Injectable,
+  UnauthorizedException,
+  BadRequestException,
+} from '@nestjs/common';
+import type { UsersService } from '../users/users.service';
+import type { TenantsService } from '../tenants/tenants.service';
+import type { JwtService } from '@nestjs/jwt';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class AuthService {
-  create(createAuthDto: CreateAuthDto) {
-    return 'This action adds a new auth';
+  constructor(
+    private usersService: UsersService,
+    private tenantsService: TenantsService,
+    private jwtService: JwtService,
+  ) {}
+
+  async register(tenantApiKey: string, registerAuthDto: any): Promise<any> {
+    const tenant = await this.tenantsService.findByApiKey(tenantApiKey);
+    if (!tenant) {
+      throw new UnauthorizedException('Invalid tenant API key.');
+    }
+
+    const existingUser = await this.usersService.findByEmailAndTenantId(
+      registerAuthDto.email,
+      tenant.id,
+    );
+    if (existingUser) {
+      throw new BadRequestException(
+        'User with this email already exists for this tenant.',
+      );
+    }
+
+    const user = await this.usersService.create(tenant.id, registerAuthDto);
+
+    const payload = {
+      userId: user.id,
+      tenantId: user.tenantId,
+      email: user.email,
+    };
+    return {
+      accessToken: this.jwtService.sign(payload),
+      user: {
+        id: user.id,
+        email: user.email,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        tenantId: user.tenantId,
+        createdAt: user.createdAt,
+        updatedAt: user.updatedAt,
+      },
+    };
   }
 
-  findAll() {
-    return `This action returns all auth`;
-  }
+  async login(loginAuthDto: any): Promise<any> {
+    const { email, password, tenantId } = loginAuthDto;
 
-  findOne(id: number) {
-    return `This action returns a #${id} auth`;
-  }
+    const user = await this.usersService.findByEmailAndTenantId(
+      email,
+      tenantId,
+    );
+    if (!user) {
+      throw new UnauthorizedException('Invalid credentials.');
+    }
 
-  update(id: number, updateAuthDto: UpdateAuthDto) {
-    return `This action updates a #${id} auth`;
-  }
+    const isPasswordValid = await bcrypt.compare(password, user.passwordHash);
+    if (!isPasswordValid) {
+      throw new UnauthorizedException('Invalid credentials.');
+    }
 
-  remove(id: number) {
-    return `This action removes a #${id} auth`;
+    const payload = {
+      userId: user.id,
+      tenantId: user.tenantId,
+      email: user.email,
+    };
+    return {
+      accessToken: this.jwtService.sign(payload),
+      user: {
+        id: user.id,
+        email: user.email,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        tenantId: user.tenantId,
+        createdAt: user.createdAt,
+        updatedAt: user.updatedAt,
+      },
+    };
   }
 }

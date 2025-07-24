@@ -22,6 +22,10 @@ import {
 import { Tenant } from '../common/decorators/tenant.decorator';
 import { IdempotencyInterceptor } from '../idempotency/idempotency.interceptor';
 import { JwtAuthGuard } from 'src/auth/passport/jwt-auth.guard';
+import { CreateDepositDto } from './dto/create-deposit.dto';
+import { TransactionResponseDto } from './dto/transaction-response.dto';
+import { CreateWithdrawalDto } from './dto/create-withdrawal.dto';
+import { CreateTransferDto } from './dto/create-transfer.dto';
 
 @ApiTags('Transactions')
 @ApiBearerAuth('access-token')
@@ -60,8 +64,8 @@ export class TransactionsController {
     req: any,
     @Tenant() tenantId: string,
     @Body() createDepositDto: CreateDepositDto,
-    @ApiHeader({ name: 'idempotency-key' }) idempotencyKey: string,
   ): Promise<TransactionResponseDto> {
+    const idempotencyKey = req.headers['idempotency-key'];
     return this.transactionsService.processDeposit(
       tenantId,
       req.user.userId,
@@ -100,8 +104,8 @@ export class TransactionsController {
     req: any,
     @Tenant() tenantId: string,
     @Body() createWithdrawalDto: CreateWithdrawalDto,
-    @ApiHeader({ name: 'idempotency-key' }) idempotencyKey: string,
   ): Promise<TransactionResponseDto> {
+    const idempotencyKey = req.headers['idempotency-key'];
     return this.transactionsService.processWithdrawal(
       tenantId,
       req.user.userId,
@@ -140,8 +144,9 @@ export class TransactionsController {
     req: any,
     @Tenant() tenantId: string,
     @Body() createTransferDto: CreateTransferDto,
-    @ApiHeader({ name: 'idempotency-key' }) idempotencyKey: string,
   ): Promise<TransactionResponseDto> {
+    const idempotencyKey = req.headers['idempotency-key'];
+
     return this.transactionsService.processTransfer(
       tenantId,
       req.user.userId,

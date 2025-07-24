@@ -39,6 +39,7 @@ const RAW_RUNTIME_STATE =
           ["@nestjs/schematics", "virtual:e4823b7f12689a8c3d4d9233514a1ad3f8f21830666846c679972d9975fbf48779f0962075a3f7bdcbdaa0e2754faf819a46c0b60c4237c649a56324e5aa18d6#npm:10.2.3"],\
           ["@nestjs/swagger", "virtual:e4823b7f12689a8c3d4d9233514a1ad3f8f21830666846c679972d9975fbf48779f0962075a3f7bdcbdaa0e2754faf819a46c0b60c4237c649a56324e5aa18d6#npm:11.2.0"],\
           ["@nestjs/testing", "virtual:e4823b7f12689a8c3d4d9233514a1ad3f8f21830666846c679972d9975fbf48779f0962075a3f7bdcbdaa0e2754faf819a46c0b60c4237c649a56324e5aa18d6#npm:10.4.20"],\
+          ["@nestjs/throttler", "virtual:e4823b7f12689a8c3d4d9233514a1ad3f8f21830666846c679972d9975fbf48779f0962075a3f7bdcbdaa0e2754faf819a46c0b60c4237c649a56324e5aa18d6#npm:6.4.0"],\
           ["@nestjs/typeorm", "virtual:e4823b7f12689a8c3d4d9233514a1ad3f8f21830666846c679972d9975fbf48779f0962075a3f7bdcbdaa0e2754faf819a46c0b60c4237c649a56324e5aa18d6#npm:11.0.0"],\
           ["@nestjs/websockets", "virtual:e4823b7f12689a8c3d4d9233514a1ad3f8f21830666846c679972d9975fbf48779f0962075a3f7bdcbdaa0e2754faf819a46c0b60c4237c649a56324e5aa18d6#npm:11.1.5"],\
           ["@types/bcrypt", "npm:6.0.0"],\
@@ -51,6 +52,7 @@ const RAW_RUNTIME_STATE =
           ["@typescript-eslint/eslint-plugin", "virtual:e4823b7f12689a8c3d4d9233514a1ad3f8f21830666846c679972d9975fbf48779f0962075a3f7bdcbdaa0e2754faf819a46c0b60c4237c649a56324e5aa18d6#npm:8.38.0"],\
           ["@typescript-eslint/parser", "virtual:e4823b7f12689a8c3d4d9233514a1ad3f8f21830666846c679972d9975fbf48779f0962075a3f7bdcbdaa0e2754faf819a46c0b60c4237c649a56324e5aa18d6#npm:8.38.0"],\
           ["bcrypt", "npm:6.0.0"],\
+          ["cache-manager", "npm:7.0.1"],\
           ["class-transformer", "npm:0.5.1"],\
           ["class-validator", "npm:0.14.2"],\
           ["eslint", "npm:8.57.1"],\
@@ -70,6 +72,7 @@ const RAW_RUNTIME_STATE =
           ["tsconfig-paths", "npm:4.2.0"],\
           ["typeorm", "virtual:e4823b7f12689a8c3d4d9233514a1ad3f8f21830666846c679972d9975fbf48779f0962075a3f7bdcbdaa0e2754faf819a46c0b60c4237c649a56324e5aa18d6#npm:0.3.25"],\
           ["typescript", "patch:typescript@npm%3A5.8.3#optional!builtin<compat/typescript>::version=5.8.3&hash=5786d5"],\
+          ["uuid", "npm:11.1.0"],\
           ["virtual-wallet-system", "workspace:."]\
         ],\
         "linkType": "SOFT"\
@@ -1471,6 +1474,15 @@ const RAW_RUNTIME_STATE =
         "linkType": "HARD"\
       }]\
     ]],\
+    ["@keyv/serialize", [\
+      ["npm:1.1.0", {\
+        "packageLocation": "../../../../.yarn/berry/cache/@keyv-serialize-npm-1.1.0-301de83375-10c0.zip/node_modules/@keyv/serialize/",\
+        "packageDependencies": [\
+          ["@keyv/serialize", "npm:1.1.0"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
     ["@ljharb/through", [\
       ["npm:2.3.14", {\
         "packageLocation": "../../../../.yarn/berry/cache/@ljharb-through-npm-2.3.14-b5df2f1802-10c0.zip/node_modules/@ljharb/through/",\
@@ -1898,6 +1910,36 @@ const RAW_RUNTIME_STATE =
           "@types/nestjs__core",\
           "@types/nestjs__microservices",\
           "@types/nestjs__platform-express"\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["@nestjs/throttler", [\
+      ["npm:6.4.0", {\
+        "packageLocation": "../../../../.yarn/berry/cache/@nestjs-throttler-npm-6.4.0-fe80020c2f-10c0.zip/node_modules/@nestjs/throttler/",\
+        "packageDependencies": [\
+          ["@nestjs/throttler", "npm:6.4.0"]\
+        ],\
+        "linkType": "SOFT"\
+      }],\
+      ["virtual:e4823b7f12689a8c3d4d9233514a1ad3f8f21830666846c679972d9975fbf48779f0962075a3f7bdcbdaa0e2754faf819a46c0b60c4237c649a56324e5aa18d6#npm:6.4.0", {\
+        "packageLocation": "./.yarn/__virtual__/@nestjs-throttler-virtual-4e3cbfdf37/5/.yarn/berry/cache/@nestjs-throttler-npm-6.4.0-fe80020c2f-10c0.zip/node_modules/@nestjs/throttler/",\
+        "packageDependencies": [\
+          ["@nestjs/common", "virtual:e4823b7f12689a8c3d4d9233514a1ad3f8f21830666846c679972d9975fbf48779f0962075a3f7bdcbdaa0e2754faf819a46c0b60c4237c649a56324e5aa18d6#npm:10.4.20"],\
+          ["@nestjs/core", "virtual:e4823b7f12689a8c3d4d9233514a1ad3f8f21830666846c679972d9975fbf48779f0962075a3f7bdcbdaa0e2754faf819a46c0b60c4237c649a56324e5aa18d6#npm:10.4.20"],\
+          ["@nestjs/throttler", "virtual:e4823b7f12689a8c3d4d9233514a1ad3f8f21830666846c679972d9975fbf48779f0962075a3f7bdcbdaa0e2754faf819a46c0b60c4237c649a56324e5aa18d6#npm:6.4.0"],\
+          ["@types/nestjs__common", null],\
+          ["@types/nestjs__core", null],\
+          ["@types/reflect-metadata", null],\
+          ["reflect-metadata", "npm:0.2.2"]\
+        ],\
+        "packagePeers": [\
+          "@nestjs/common",\
+          "@nestjs/core",\
+          "@types/nestjs__common",\
+          "@types/nestjs__core",\
+          "@types/reflect-metadata",\
+          "reflect-metadata"\
         ],\
         "linkType": "HARD"\
       }]\
@@ -3781,6 +3823,16 @@ const RAW_RUNTIME_STATE =
           ["ssri", "npm:12.0.0"],\
           ["tar", "npm:7.4.3"],\
           ["unique-filename", "npm:4.0.0"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["cache-manager", [\
+      ["npm:7.0.1", {\
+        "packageLocation": "../../../../.yarn/berry/cache/cache-manager-npm-7.0.1-3508147002-10c0.zip/node_modules/cache-manager/",\
+        "packageDependencies": [\
+          ["cache-manager", "npm:7.0.1"],\
+          ["keyv", "npm:5.4.0"]\
         ],\
         "linkType": "HARD"\
       }]\
@@ -6866,6 +6918,14 @@ const RAW_RUNTIME_STATE =
           ["keyv", "npm:4.5.4"]\
         ],\
         "linkType": "HARD"\
+      }],\
+      ["npm:5.4.0", {\
+        "packageLocation": "../../../../.yarn/berry/cache/keyv-npm-5.4.0-24070d1f4b-10c0.zip/node_modules/keyv/",\
+        "packageDependencies": [\
+          ["@keyv/serialize", "npm:1.1.0"],\
+          ["keyv", "npm:5.4.0"]\
+        ],\
+        "linkType": "HARD"\
       }]\
     ]],\
     ["kleur", [\
@@ -9647,6 +9707,7 @@ const RAW_RUNTIME_STATE =
           ["@nestjs/schematics", "virtual:e4823b7f12689a8c3d4d9233514a1ad3f8f21830666846c679972d9975fbf48779f0962075a3f7bdcbdaa0e2754faf819a46c0b60c4237c649a56324e5aa18d6#npm:10.2.3"],\
           ["@nestjs/swagger", "virtual:e4823b7f12689a8c3d4d9233514a1ad3f8f21830666846c679972d9975fbf48779f0962075a3f7bdcbdaa0e2754faf819a46c0b60c4237c649a56324e5aa18d6#npm:11.2.0"],\
           ["@nestjs/testing", "virtual:e4823b7f12689a8c3d4d9233514a1ad3f8f21830666846c679972d9975fbf48779f0962075a3f7bdcbdaa0e2754faf819a46c0b60c4237c649a56324e5aa18d6#npm:10.4.20"],\
+          ["@nestjs/throttler", "virtual:e4823b7f12689a8c3d4d9233514a1ad3f8f21830666846c679972d9975fbf48779f0962075a3f7bdcbdaa0e2754faf819a46c0b60c4237c649a56324e5aa18d6#npm:6.4.0"],\
           ["@nestjs/typeorm", "virtual:e4823b7f12689a8c3d4d9233514a1ad3f8f21830666846c679972d9975fbf48779f0962075a3f7bdcbdaa0e2754faf819a46c0b60c4237c649a56324e5aa18d6#npm:11.0.0"],\
           ["@nestjs/websockets", "virtual:e4823b7f12689a8c3d4d9233514a1ad3f8f21830666846c679972d9975fbf48779f0962075a3f7bdcbdaa0e2754faf819a46c0b60c4237c649a56324e5aa18d6#npm:11.1.5"],\
           ["@types/bcrypt", "npm:6.0.0"],\
@@ -9659,6 +9720,7 @@ const RAW_RUNTIME_STATE =
           ["@typescript-eslint/eslint-plugin", "virtual:e4823b7f12689a8c3d4d9233514a1ad3f8f21830666846c679972d9975fbf48779f0962075a3f7bdcbdaa0e2754faf819a46c0b60c4237c649a56324e5aa18d6#npm:8.38.0"],\
           ["@typescript-eslint/parser", "virtual:e4823b7f12689a8c3d4d9233514a1ad3f8f21830666846c679972d9975fbf48779f0962075a3f7bdcbdaa0e2754faf819a46c0b60c4237c649a56324e5aa18d6#npm:8.38.0"],\
           ["bcrypt", "npm:6.0.0"],\
+          ["cache-manager", "npm:7.0.1"],\
           ["class-transformer", "npm:0.5.1"],\
           ["class-validator", "npm:0.14.2"],\
           ["eslint", "npm:8.57.1"],\
@@ -9678,6 +9740,7 @@ const RAW_RUNTIME_STATE =
           ["tsconfig-paths", "npm:4.2.0"],\
           ["typeorm", "virtual:e4823b7f12689a8c3d4d9233514a1ad3f8f21830666846c679972d9975fbf48779f0962075a3f7bdcbdaa0e2754faf819a46c0b60c4237c649a56324e5aa18d6#npm:0.3.25"],\
           ["typescript", "patch:typescript@npm%3A5.8.3#optional!builtin<compat/typescript>::version=5.8.3&hash=5786d5"],\
+          ["uuid", "npm:11.1.0"],\
           ["virtual-wallet-system", "workspace:."]\
         ],\
         "linkType": "SOFT"\

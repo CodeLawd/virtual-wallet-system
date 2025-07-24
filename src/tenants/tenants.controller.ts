@@ -1,34 +1,27 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { TenantsService } from './tenants.service';
-import { CreateTenantDto } from './dto/create-tenant.dto';
-import { UpdateTenantDto } from './dto/update-tenant.dto';
+import { Controller, Post, HttpCode, HttpStatus } from '@nestjs/common';
+import type { TenantsService } from './tenants.service';
+import { CreateTenantDto, TenantResponseDto } from './dto/create-tenant.dto';
+import { ApiTags, ApiOperation, ApiResponse, ApiBody } from '@nestjs/swagger';
 
+@ApiTags('Tenants')
 @Controller('tenants')
 export class TenantsController {
   constructor(private readonly tenantsService: TenantsService) {}
 
   @Post()
-  create(@Body() createTenantDto: CreateTenantDto) {
+  @HttpCode(HttpStatus.CREATED)
+  @ApiOperation({ summary: 'Create a new tenant' })
+  @ApiBody({ type: CreateTenantDto })
+  @ApiResponse({
+    status: HttpStatus.CREATED,
+    description: 'The tenant has been successfully created.',
+    type: TenantResponseDto,
+  })
+  @ApiResponse({
+    status: HttpStatus.CONFLICT,
+    description: 'Tenant with this name already exists.',
+  })
+  async create(createTenantDto: CreateTenantDto): Promise<TenantResponseDto> {
     return this.tenantsService.create(createTenantDto);
-  }
-
-  @Get()
-  findAll() {
-    return this.tenantsService.findAll();
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.tenantsService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateTenantDto: UpdateTenantDto) {
-    return this.tenantsService.update(+id, updateTenantDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.tenantsService.remove(+id);
   }
 }

@@ -5,7 +5,6 @@ import {
   ConflictException,
 } from '@nestjs/common';
 import type { Repository, DataSource, EntityManager } from 'typeorm';
-import { Transaction } from '../entities/transaction.entity';
 import type { WalletsService } from '../wallets/wallets.service';
 import type { PaymentProvidersService } from '../payment-providers/payment-providers.service';
 import type { IdempotencyService } from '../idempotency/idempotency.service';
@@ -19,8 +18,8 @@ import {
   IdempotencyStatus,
 } from '../common/enums';
 import type { Cache } from 'cache-manager';
-import type { VirtualAccount } from '../virtual-accounts/virtual-account.entity'; // Import VirtualAccount
 import type { VirtualAccountsService } from '../virtual-accounts/virtual-accounts.service'; // Import VirtualAccountsService
+import { Transaction } from './entities/transaction.entity';
 
 @Injectable()
 export class TransactionsService {

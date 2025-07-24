@@ -1,26 +1,73 @@
-import { Injectable } from '@nestjs/common';
-import { CreateTenantDto } from './dto/create-tenant.dto';
-import { UpdateTenantDto } from './dto/update-tenant.dto';
+import {
+  Injectable,
+  ConflictException,
+  NotFoundException,
+} from '@nestjs/common';
+import type { Repository } from 'typeorm';
+
+import { v4 as uuidv4 } from 'uuid';
+import { PostgresErrorCode } from '../common/constants/postgres-error-codes.enum';
+import { Tenant } from './entities/tenant.entity';
+import { CreateTenantDto, TenantResponseDto } from './dto/create-tenant.dto';
 
 @Injectable()
 export class TenantsService {
-  create(createTenantDto: CreateTenantDto) {
-    return 'This action adds a new tenant';
+  private tenantsRepository: Repository<Tenant>; // Inject Tenant repository
+
+  constructor(tenantsRepository: Repository<Tenant>) {
+    this.tenantsRepository = tenantsRepository;
   }
 
-  findAll() {
-    return `This action returns all tenants`;
+  async create(createTenantDto: CreateTenantDto): Promise<TenantResponseDto> {
+    const { name } = createTenantDto;
+    const apiKey = uuidv4(); // Simple API key generation
+
+    const newTenant = this.tenantsRepository.create({ name, apiKey });
+
+    try {
+      const tenant = await this.tenantsRepository.save(newTenant);
+      return {
+        id: tenant.id,
+        name: tenant.name,
+        apiKey: tenant.apiKey,
+        createdAt: tenant.createdAt,
+        updatedAt: tenant.updatedAt,
+      };
+    } catch (error) {
+      if (error.code === PostgresErrorCode.UniqueViolation) {
+        throw new ConflictException(
+          `Tenant with name '${name}' already exists.`,
+        );
+      }
+      throw error;
+    }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} tenant`;
+  async findByApiKey(apiKey: string): Promise<TenantResponseDto | null> {
+    const tenant = await this.tenantsRepository.findOneBy({ apiKey });
+    if (!tenant) {
+      return null;
+    }
+    return {
+      id: tenant.id,
+      name: tenant.name,
+      apiKey: tenant.apiKey,
+      createdAt: tenant.createdAt,
+      updatedAt: tenant.updatedAt,
+    };
   }
 
-  update(id: number, updateTenantDto: UpdateTenantDto) {
-    return `This action updates a #${id} tenant`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} tenant`;
+  async findById(id: string): Promise<TenantResponseDto> {
+    const tenant = await this.tenantsRepository.findOneBy({ id });
+    if (!tenant) {
+      throw new NotFoundException(`Tenant with ID '${id}' not found.`);
+    }
+    return {
+      id: tenant.id,
+      name: tenant.name,
+      apiKey: tenant.apiKey,
+      createdAt: tenant.createdAt,
+      updatedAt: tenant.updatedAt,
+    };
   }
 }
