@@ -1,4 +1,4 @@
-import { Controller, Post, HttpCode, HttpStatus } from '@nestjs/common';
+import { Controller, Post, HttpCode, HttpStatus, Body } from '@nestjs/common';
 import { TenantsService } from './tenants.service';
 import { CreateTenantDto, TenantResponseDto } from './dto/create-tenant.dto';
 import { ApiTags, ApiOperation, ApiResponse, ApiBody } from '@nestjs/swagger';
@@ -21,7 +21,7 @@ export class TenantsController {
     status: HttpStatus.CONFLICT,
     description: 'Tenant with this name already exists.',
   })
-  async create(createTenantDto: CreateTenantDto): Promise<TenantResponseDto> {
+  async create(@Body() createTenantDto: CreateTenantDto): Promise<TenantResponseDto> {
     return this.tenantsService.create(createTenantDto);
   }
 }

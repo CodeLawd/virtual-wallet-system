@@ -1,4 +1,4 @@
-import { type ExceptionFilter, Catch, type ArgumentsHost, HttpException, HttpStatus } from "@nestjs/common"
+import { type ExceptionFilter, Catch, type ArgumentsHost, HttpException, HttpStatus, UnauthorizedException } from "@nestjs/common"
 import type { HttpAdapterHost } from "@nestjs/core"
 import { QueryFailedError, EntityNotFoundError } from "typeorm" // Import TypeORM errors
 import { PostgresErrorCode } from "../constants/postgres-error-codes.enum" // Custom enum for PG error codes
@@ -25,6 +25,10 @@ export class AllExceptionsFilter implements ExceptionFilter {
         message = (response as any).message || message
         error = (response as any).error || error
       }
+    } else if (exception instanceof UnauthorizedException) {
+      httpStatus = HttpStatus.UNAUTHORIZED
+      message = exception.message || "Unauthorized access"
+      error = "Unauthorized"
     } else if (exception instanceof QueryFailedError) {
       // Handle TypeORM QueryFailedError (e.g., from unique constraints, foreign keys)
       const pgError = exception.driverError
@@ -55,8 +59,15 @@ export class AllExceptionsFilter implements ExceptionFilter {
       message = "Resource not found."
       error = "NotFound"
     } else if (exception instanceof Error) {
-      message = exception.message
-      error = exception.name
+      // Handle authentication strategy errors
+      if (exception.message.includes('Unknown authentication strategy')) {
+        httpStatus = HttpStatus.UNAUTHORIZED
+        message = "Authentication failed. Invalid authentication method."
+        error = "Unauthorized"
+      } else {
+        message = exception.message
+        error = exception.name
+      }
     }
 
     const responseBody = {

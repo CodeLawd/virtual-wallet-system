@@ -5,6 +5,7 @@ import {
   HttpCode,
   HttpStatus,
   UseGuards,
+  Request,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import {
@@ -26,7 +27,7 @@ export class AuthController {
   @UseGuards(TenantApiKeyGuard) // Use TenantApiKeyGuard for registration
   @ApiOperation({ summary: 'Register a new user for a tenant' })
   @ApiBody({})
-  @ApiSecurity('tenant-api-key') // Document the API key header
+  @ApiSecurity('x-tenant-api-key') // Document the API key header
   @ApiResponse({
     status: HttpStatus.CREATED,
     description: 'User registered successfully.',
@@ -39,8 +40,9 @@ export class AuthController {
     status: HttpStatus.BAD_REQUEST,
     description: 'User with this email already exists for this tenant.',
   })
-  async register(@Body() registerAuthDto: any, req: any): Promise<any> {
-    const tenantApiKey = req.headers['tenant-api-key']; // tenantApiKey is set by TenantApiKeyGuard
+ async register(@Body() registerAuthDto: any, @Request() req: any): Promise<any> {
+    // The tenant information is set by TenantApiKeyGuard after successful authentication
+    const tenantApiKey = req.headers['x-tenant-api-key'];
     return this.authService.register(tenantApiKey, registerAuthDto);
   }
 

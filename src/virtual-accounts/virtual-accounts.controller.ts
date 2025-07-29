@@ -1,4 +1,4 @@
-import { Controller, Post, UseGuards, HttpStatus } from '@nestjs/common';
+import { Controller, Post, UseGuards, HttpStatus, Body, Request } from '@nestjs/common';
 import { VirtualAccountsService } from './virtual-accounts.service';
 import { CreateVirtualAccountDto } from './dto/create-virtual-account.dto';
 
@@ -42,8 +42,8 @@ export class VirtualAccountsController {
     description: 'Unauthorized.',
   })
   async create(
-    req: any,
-    createVirtualAccountDto: CreateVirtualAccountDto,
+    @Request() req: any,
+    @Body() createVirtualAccountDto: CreateVirtualAccountDto,
   ): Promise<any> {
     const tenantId = req.headers['tenant-id']; // Assuming tenantId is passed in headers
     return this.virtualAccountsService.create(
