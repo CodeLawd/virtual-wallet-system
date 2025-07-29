@@ -1,4 +1,10 @@
-import { Controller, Get, UseGuards, HttpStatus } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  UseGuards,
+  HttpStatus,
+  Request,
+} from '@nestjs/common';
 import { UsersService } from './users.service';
 import {
   ApiBearerAuth,
@@ -9,9 +15,9 @@ import {
 import { JwtAuthGuard } from 'src/auth/passport/jwt-auth.guard';
 import { UserResponseDto } from './dto/user-response.dto';
 import { Tenant } from 'src/common/decorators/tenant.decorator';
-import { Request } from 'express';
+import { Request as ExpressRequrest } from 'express';
 
-interface AuthenticatedRequest extends Request {
+interface AuthenticatedRequest extends ExpressRequrest {
   user: {
     userId: string;
     tenantId: string;
@@ -38,7 +44,7 @@ export class UsersController {
     description: 'Unauthorized.',
   })
   async getMe(
-    req: AuthenticatedRequest,
+    @Request() req: AuthenticatedRequest,
     @Tenant() tenantId: string,
   ): Promise<UserResponseDto> {
     return this.usersService.findByIdAndTenantId(req.user.userId, tenantId);

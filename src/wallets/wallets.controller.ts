@@ -6,6 +6,7 @@ import {
   Param,
   UseGuards,
   HttpStatus,
+  Request,
 } from '@nestjs/common';
 import { WalletsService } from './wallets.service';
 import { CreateWalletDto, WalletResponseDto } from './dto/create-wallet.dto';
@@ -43,7 +44,7 @@ export class WalletsController {
     description: 'Unauthorized.',
   })
   async create(
-    req: any,
+    @Request() req: any,
     @Tenant() tenantId: string,
     @Body() createWalletDto: CreateWalletDto,
   ): Promise<WalletResponseDto> {
@@ -66,7 +67,7 @@ export class WalletsController {
     description: 'Unauthorized.',
   })
   async findAll(
-    req: any,
+    @Request() req: any,
     @Tenant() tenantId: string,
   ): Promise<WalletResponseDto[]> {
     return this.walletsService.findAllByUserId(req.user.userId, tenantId);

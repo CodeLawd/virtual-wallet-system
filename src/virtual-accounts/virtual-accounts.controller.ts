@@ -1,4 +1,11 @@
-import { Controller, Post, UseGuards, HttpStatus, Body, Request } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  UseGuards,
+  HttpStatus,
+  Body,
+  Request,
+} from '@nestjs/common';
 import { VirtualAccountsService } from './virtual-accounts.service';
 import { CreateVirtualAccountDto } from './dto/create-virtual-account.dto';
 
@@ -11,6 +18,7 @@ import {
 } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/passport/jwt-auth.guard';
 import { VirtualAccountResponseDto } from './dto/virtual-account-response.dto';
+import { Tenant } from '../common/decorators/tenant.decorator';
 
 @ApiTags('Virtual Accounts')
 @ApiBearerAuth('access-token')
@@ -43,9 +51,9 @@ export class VirtualAccountsController {
   })
   async create(
     @Request() req: any,
+    @Tenant() tenantId: string,
     @Body() createVirtualAccountDto: CreateVirtualAccountDto,
   ): Promise<any> {
-    const tenantId = req.headers['tenant-id']; // Assuming tenantId is passed in headers
     return this.virtualAccountsService.create(
       tenantId,
       req.user.userId,

@@ -7,6 +7,7 @@ import {
   Query,
   UseInterceptors,
   HttpStatus,
+  Request,
 } from '@nestjs/common';
 import { TransactionsService } from './transactions.service';
 
@@ -61,7 +62,7 @@ export class TransactionsController {
     description: 'Unauthorized.',
   })
   async deposit(
-    req: any,
+    @Request() req: any,
     @Tenant() tenantId: string,
     @Body() createDepositDto: CreateDepositDto,
   ): Promise<TransactionResponseDto> {
@@ -101,7 +102,7 @@ export class TransactionsController {
     description: 'Unauthorized.',
   })
   async withdraw(
-    req: any,
+    @Request() req: any,
     @Tenant() tenantId: string,
     @Body() createWithdrawalDto: CreateWithdrawalDto,
   ): Promise<TransactionResponseDto> {
@@ -141,7 +142,7 @@ export class TransactionsController {
     description: 'Unauthorized.',
   })
   async transfer(
-    req: any,
+    @Request() req: any,
     @Tenant() tenantId: string,
     @Body() createTransferDto: CreateTransferDto,
   ): Promise<TransactionResponseDto> {

@@ -13,10 +13,10 @@ export class CreateWalletDto {
   @Length(3, 3, {
     message: 'Currency must be a 3-letter ISO 4217 code (e.g., NGN, USD).',
   })
-  @IsCurrency({
-    require_symbol: false,
-    require_decimal: false,
-  })
+  // @IsCurrency({
+  //   require_symbol: false,
+  //   require_decimal: false,
+  // })
   currency: string;
 }
 

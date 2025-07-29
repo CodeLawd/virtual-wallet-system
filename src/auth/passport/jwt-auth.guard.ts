@@ -19,4 +19,16 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
     }
     return super.canActivate(context);
   }
+
+  handleRequest(err: any, user: any, info: any, context: ExecutionContext) {
+    if (err || !user) {
+      throw err || new Error('Unauthorized');
+    }
+    
+    // Attach tenantId to the request object for @Tenant() decorator
+    const request = context.switchToHttp().getRequest();
+    request.tenantId = user.tenantId;
+    
+    return user;
+  }
 }
