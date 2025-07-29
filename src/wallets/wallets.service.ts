@@ -5,11 +5,13 @@ import {
   BadRequestException,
 } from '@nestjs/common'; // Import Inject, CACHE_MANAGER
 import type { Repository, EntityManager } from 'typeorm';
-import { Wallet } from '../entities/wallet.entity';
-import type { CreateWalletDto } from './dto/create-wallet.dto';
-import type { WalletResponseDto } from './dto/wallet-response.dto';
+import type {
+  CreateWalletDto,
+  WalletResponseDto,
+} from './dto/create-wallet.dto';
 import { PostgresErrorCode } from '../common/constants/postgres-error-codes.enum';
 import type { Cache } from 'cache-manager';
+import { Wallet } from './entities/wallet.entity';
 
 @Injectable()
 export class WalletsService {

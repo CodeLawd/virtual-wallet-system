@@ -6,13 +6,17 @@ import { WalletsModule } from './wallets/wallets.module';
 import { VirtualAccountsModule } from './virtual-accounts/virtual-accounts.module';
 import { TransactionsModule } from './transactions/transactions.module';
 import { AuthModule } from './auth/auth.module';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { JwtModule } from '@nestjs/jwt';
 import { TenantsModule } from './tenants/tenants.module';
 import { IdempotencyModule } from './idempotency/idempotency.module';
 import { PaymentProvidersModule } from './payment-providers/payment-providers.module';
 import { WebhooksModule } from './webhooks/webhooks.module';
+import { QueueModule } from './queue/queue.module';
+import { BullModule } from '@nestjs/bullmq';
+import { ThrottlerModule } from '@nestjs/throttler';
+import * as redisStore from 'cache-manager-redis-store';
 
 @Module({
   imports: [
@@ -43,6 +47,35 @@ import { WebhooksModule } from './webhooks/webhooks.module';
       secret: process.env.JWT_SECRET,
       signOptions: { expiresIn: '1d' },
     }),
+    BullModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: async (configService: ConfigService) => ({
+        connection: {
+          host: configService.get<string>('REDIS_HOST') || 'localhost',
+          port: configService.get<number>('REDIS_PORT') || 6379,
+        },
+      }),
+    }),
+    ThrottlerModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => ({
+        throttlers: [
+          {
+            ttl: configService.get<number>('THROTTLE_TTL') || 60,
+            limit: configService.get<number>('THROTTLE_LIMIT') || 100,
+          },
+        ],
+        storage: new (redisStore as any)({
+          // Use Redis for storage
+          url: `redis://${configService.get<string>(
+            'REDIS_HOST',
+          )}:${configService.get<number>('REDIS_PORT')}`,
+          ttl: configService.get<number>('THROTTLE_TTL') || 60,
+        }),
+      }),
+    }),
     UsersModule,
     WalletsModule,
     VirtualAccountsModule,
@@ -52,6 +85,7 @@ import { WebhooksModule } from './webhooks/webhooks.module';
     IdempotencyModule,
     PaymentProvidersModule,
     WebhooksModule,
+    QueueModule,
   ],
   controllers: [AppController],
   providers: [AppService],

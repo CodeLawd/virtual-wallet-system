@@ -866,22 +866,9 @@ export class TransactionsService {
     return transaction;
   }
 
-  /**
-   * Processes a deposit initiated via a virtual account webhook.
-   * This method is called by the WebhooksService.
-   * @param tenantId The ID of the tenant.
-   * @param virtualAccount The virtual account entity.
-   * @param amount The amount deposited.
-   * @param currency The currency of the deposit.
-   * @param providerTransactionId The transaction ID from the payment provider.
-   * @param providerMetadata Any additional metadata from the provider.
-   * @param description Optional description for the transaction.
-   * @param entityManager The TypeORM EntityManager for the ongoing transaction.
-   * @returns The created transaction.
-   */
   async processVirtualAccountDeposit(
     tenantId: string,
-    virtualAccount: VirtualAccount,
+    virtualAccount: any,
     amount: number,
     currency: string,
     providerTransactionId: string,

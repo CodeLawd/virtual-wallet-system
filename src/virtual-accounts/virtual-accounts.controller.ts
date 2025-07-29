@@ -1,34 +1,55 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { VirtualAccountsService } from './virtual-accounts.service';
+import { Controller, Post, UseGuards, HttpStatus } from '@nestjs/common';
+import type { VirtualAccountsService } from './virtual-accounts.service';
 import { CreateVirtualAccountDto } from './dto/create-virtual-account.dto';
-import { UpdateVirtualAccountDto } from './dto/update-virtual-account.dto';
 
+import {
+  ApiTags,
+  ApiOperation,
+  ApiResponse,
+  ApiBearerAuth,
+  ApiBody,
+} from '@nestjs/swagger';
+import { JwtAuthGuard } from 'src/auth/passport/jwt-auth.guard';
+import { VirtualAccountResponseDto } from './dto/virtual-account-response.dto';
+
+@ApiTags('Virtual Accounts')
+@ApiBearerAuth('access-token')
+@UseGuards(JwtAuthGuard)
 @Controller('virtual-accounts')
 export class VirtualAccountsController {
-  constructor(private readonly virtualAccountsService: VirtualAccountsService) {}
+  constructor(
+    private readonly virtualAccountsService: VirtualAccountsService,
+  ) {}
 
   @Post()
-  create(@Body() createVirtualAccountDto: CreateVirtualAccountDto) {
-    return this.virtualAccountsService.create(createVirtualAccountDto);
-  }
-
-  @Get()
-  findAll() {
-    return this.virtualAccountsService.findAll();
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.virtualAccountsService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateVirtualAccountDto: UpdateVirtualAccountDto) {
-    return this.virtualAccountsService.update(+id, updateVirtualAccountDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.virtualAccountsService.remove(+id);
+  @ApiOperation({ summary: 'Create a new virtual account for a wallet' })
+  @ApiBody({ type: CreateVirtualAccountDto })
+  @ApiResponse({
+    status: HttpStatus.CREATED,
+    description: 'Virtual account created successfully.',
+    type: VirtualAccountResponseDto,
+  })
+  @ApiResponse({
+    status: HttpStatus.BAD_REQUEST,
+    description: 'Invalid request or wallet not found.',
+  })
+  @ApiResponse({
+    status: HttpStatus.CONFLICT,
+    description: 'Virtual account already exists for this wallet/provider.',
+  })
+  @ApiResponse({
+    status: HttpStatus.UNAUTHORIZED,
+    description: 'Unauthorized.',
+  })
+  async create(
+    req: any,
+    createVirtualAccountDto: CreateVirtualAccountDto,
+  ): Promise<any> {
+    const tenantId = req.headers['tenant-id']; // Assuming tenantId is passed in headers
+    return this.virtualAccountsService.create(
+      tenantId,
+      req.user.userId,
+      createVirtualAccountDto,
+    );
   }
 }
