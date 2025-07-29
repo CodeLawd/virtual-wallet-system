@@ -40,7 +40,10 @@ export class AuthController {
     status: HttpStatus.BAD_REQUEST,
     description: 'User with this email already exists for this tenant.',
   })
- async register(@Body() registerAuthDto: any, @Request() req: any): Promise<any> {
+  async register(
+    @Body() registerAuthDto: any,
+    @Request() req: any,
+  ): Promise<any> {
     // The tenant information is set by TenantApiKeyGuard after successful authentication
     const tenantApiKey = req.headers['x-tenant-api-key'];
     return this.authService.register(tenantApiKey, registerAuthDto);

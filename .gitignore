@@ -4,6 +4,7 @@
 /build
 /.vscode
 /.yarn
+dump.rdb
 
 # Logs
 logs
