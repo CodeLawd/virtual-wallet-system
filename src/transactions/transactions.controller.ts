@@ -8,7 +8,7 @@ import {
   UseInterceptors,
   HttpStatus,
 } from '@nestjs/common';
-import type { TransactionsService } from './transactions.service';
+import { TransactionsService } from './transactions.service';
 
 import {
   ApiTags,

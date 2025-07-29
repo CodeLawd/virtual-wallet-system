@@ -3,26 +3,22 @@ import {
   ConflictException,
   NotFoundException,
   BadRequestException,
-} from '@nestjs/common'; // Import Inject, CACHE_MANAGER
+} from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
 import type { Repository, EntityManager } from 'typeorm';
 import type {
   CreateWalletDto,
   WalletResponseDto,
 } from './dto/create-wallet.dto';
 import { PostgresErrorCode } from '../common/constants/postgres-error-codes.enum';
-import type { Cache } from 'cache-manager';
 import { Wallet } from './entities/wallet.entity';
 
 @Injectable()
 export class WalletsService {
-  private walletsRepository: Repository<Wallet>;
-
   constructor(
-    entityManager: EntityManager,
-    private cacheManager: Cache,
-  ) {
-    this.walletsRepository = entityManager.getRepository(Wallet);
-  }
+    @InjectRepository(Wallet)
+    private walletsRepository: Repository<Wallet>,
+  ) {}
 
   async create(
     userId: string,
@@ -40,8 +36,6 @@ export class WalletsService {
 
     try {
       const wallet = await this.walletsRepository.save(newWallet);
-      await this.cacheManager.del(`wallets_user_${userId}_tenant_${tenantId}`); // Invalidate user's wallets cache
-      await this.cacheManager.del(`wallet_${wallet.id}_tenant_${tenantId}`); // Invalidate specific wallet cache
       return {
         id: wallet.id,
         userId: wallet.userId,
@@ -65,56 +59,45 @@ export class WalletsService {
     userId: string,
     tenantId: string,
   ): Promise<WalletResponseDto[]> {
-    const cacheKey = `wallets_user_${userId}_tenant_${tenantId}`;
-    let wallets = await this.cacheManager.get<WalletResponseDto[]>(cacheKey);
+    const wallets = await this.walletsRepository.find({
+      where: { userId, tenantId },
+    });
 
-    if (!wallets) {
-      const walletEntities = await this.walletsRepository.find({
-        where: { userId, tenantId },
-      });
-      wallets = walletEntities.map((wallet) => ({
-        id: wallet.id,
-        userId: wallet.userId,
-        tenantId: wallet.tenantId,
-        balance: Number.parseFloat(wallet.balance.toString()),
-        currency: wallet.currency,
-        createdAt: wallet.createdAt,
-        updatedAt: wallet.updatedAt,
-      }));
-      await this.cacheManager.set(cacheKey, wallets);
-    }
-    return wallets;
+    return wallets.map((wallet) => ({
+      id: wallet.id,
+      userId: wallet.userId,
+      tenantId: wallet.tenantId,
+      balance: Number.parseFloat(wallet.balance.toString()),
+      currency: wallet.currency,
+      createdAt: wallet.createdAt,
+      updatedAt: wallet.updatedAt,
+    }));
   }
 
   async findByTenantIdAndId(
     id: string,
     tenantId: string,
   ): Promise<WalletResponseDto> {
-    const cacheKey = `wallet_${id}_tenant_${tenantId}`;
-    let wallet = await this.cacheManager.get<WalletResponseDto>(cacheKey);
+    const wallet = await this.walletsRepository.findOneBy({
+      id,
+      tenantId,
+    });
 
     if (!wallet) {
-      const walletEntity = await this.walletsRepository.findOneBy({
-        id,
-        tenantId,
-      });
-      if (!walletEntity) {
-        throw new NotFoundException(
-          `Wallet with ID '${id}' not found for this tenant.`,
-        );
-      }
-      wallet = {
-        id: walletEntity.id,
-        userId: walletEntity.userId,
-        tenantId: walletEntity.tenantId,
-        balance: Number.parseFloat(walletEntity.balance.toString()),
-        currency: walletEntity.currency,
-        createdAt: walletEntity.createdAt,
-        updatedAt: walletEntity.updatedAt,
-      };
-      await this.cacheManager.set(cacheKey, wallet);
+      throw new NotFoundException(
+        `Wallet with ID '${id}' not found for this tenant.`,
+      );
     }
-    return wallet;
+
+    return {
+      id: wallet.id,
+      userId: wallet.userId,
+      tenantId: wallet.tenantId,
+      balance: Number.parseFloat(wallet.balance.toString()),
+      currency: wallet.currency,
+      createdAt: wallet.createdAt,
+      updatedAt: wallet.updatedAt,
+    };
   }
 
   /**
@@ -178,12 +161,7 @@ export class WalletsService {
       createdAt: updatedWallet.createdAt,
       updatedAt: updatedWallet.updatedAt,
     };
-    await this.cacheManager.del(
-      `wallet_${walletResponse.id}_tenant_${walletResponse.tenantId}`,
-    );
-    await this.cacheManager.del(
-      `wallets_user_${walletResponse.userId}_tenant_${walletResponse.tenantId}`,
-    );
+
 
     return walletResponse;
   }

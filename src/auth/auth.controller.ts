@@ -6,7 +6,7 @@ import {
   HttpStatus,
   UseGuards,
 } from '@nestjs/common';
-import type { AuthService } from './auth.service';
+import { AuthService } from './auth.service';
 import {
   ApiTags,
   ApiOperation,

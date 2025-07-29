@@ -7,11 +7,12 @@ import {
   Logger,
   BadRequestException,
 } from "@nestjs/common"
+import { InjectDataSource } from "@nestjs/typeorm"
 import { Observable, throwError } from "rxjs"
 import { catchError, tap } from "rxjs/operators"
-import type { IdempotencyService } from "./idempotency.service"
+import { IdempotencyService } from "./idempotency.service"
 import { IdempotencyStatus } from "../common/enums"
-import type { DataSource } from "typeorm" // Import DataSource
+import { DataSource } from "typeorm" // Import DataSource
 
 @Injectable()
 export class IdempotencyInterceptor implements NestInterceptor {
@@ -19,7 +20,7 @@ export class IdempotencyInterceptor implements NestInterceptor {
 
   constructor(
     private idempotencyService: IdempotencyService,
-    private dataSource: DataSource, // Inject DataSource
+    @InjectDataSource() private dataSource: DataSource, // Inject DataSource
   ) {}
 
   async intercept(context: ExecutionContext, next: CallHandler): Promise<Observable<any>> {

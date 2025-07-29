@@ -3,6 +3,7 @@ import {
   ConflictException,
   NotFoundException,
 } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
 import type { Repository } from 'typeorm';
 
 import type { UserResponseDto } from './dto/user-response.dto';
@@ -13,11 +14,10 @@ import { CreateUserDTO } from './dto/create-user.dto';
 
 @Injectable()
 export class UsersService {
-  private usersRepository: Repository<User>; // Inject User repository
-
-  constructor(usersRepository: Repository<User>) {
-    this.usersRepository = usersRepository;
-  }
+  constructor(
+    @InjectRepository(User)
+    private usersRepository: Repository<User>,
+  ) {}
 
   async create(
     tenantId: string,

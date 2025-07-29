@@ -3,11 +3,13 @@ import {
   BadRequestException,
   NotFoundException,
   ConflictException,
+  Inject,
 } from '@nestjs/common';
-import type { Repository, DataSource, EntityManager } from 'typeorm';
-import type { WalletsService } from '../wallets/wallets.service';
-import type { PaymentProvidersService } from '../payment-providers/payment-providers.service';
-import type { IdempotencyService } from '../idempotency/idempotency.service';
+import { InjectRepository, InjectDataSource } from '@nestjs/typeorm';
+import { Repository, DataSource, EntityManager } from 'typeorm';
+import { WalletsService } from '../wallets/wallets.service';
+import { PaymentProvidersService } from '../payment-providers/payment-providers.service';
+import { IdempotencyService } from '../idempotency/idempotency.service';
 import type { CreateDepositDto } from './dto/create-deposit.dto';
 import type { CreateWithdrawalDto } from './dto/create-withdrawal.dto';
 import type { CreateTransferDto } from './dto/create-transfer.dto';
@@ -17,9 +19,10 @@ import {
   TransactionStatus,
   IdempotencyStatus,
 } from '../common/enums';
-import type { Cache } from 'cache-manager';
-import type { VirtualAccountsService } from '../virtual-accounts/virtual-accounts.service'; // Import VirtualAccountsService
+import { Cache } from 'cache-manager';
+import { VirtualAccountsService } from '../virtual-accounts/virtual-accounts.service'; // Import VirtualAccountsService
 import { Transaction } from './entities/transaction.entity';
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
 
 @Injectable()
 export class TransactionsService {
@@ -32,13 +35,14 @@ export class TransactionsService {
   private cacheManager: Cache;
 
   constructor(
+    @InjectRepository(Transaction)
     transactionsRepository: Repository<Transaction>,
-    dataSource: DataSource,
+    @InjectDataSource() dataSource: DataSource,
     walletsService: WalletsService,
     paymentProvidersService: PaymentProvidersService,
     idempotencyService: IdempotencyService,
     virtualAccountsService: VirtualAccountsService, // Inject VirtualAccountsService
-    cacheManager: Cache,
+    @Inject(CACHE_MANAGER) cacheManager: Cache,
   ) {
     this.transactionsRepository = transactionsRepository;
     this.dataSource = dataSource;

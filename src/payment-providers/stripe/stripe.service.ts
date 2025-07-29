@@ -4,7 +4,7 @@ import type {
   InitiatePaymentResponse,
   WebhookProcessingResult,
 } from "../../common/interfaces/payment-provider.interface"
-import type { ConfigService } from "@nestjs/config"
+import { ConfigService } from "@nestjs/config"
 
 @Injectable()
 export class StripeService implements IPaymentProvider {

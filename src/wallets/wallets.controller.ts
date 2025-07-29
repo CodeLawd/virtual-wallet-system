@@ -7,7 +7,7 @@ import {
   UseGuards,
   HttpStatus,
 } from '@nestjs/common';
-import type { WalletsService } from './wallets.service';
+import { WalletsService } from './wallets.service';
 import { CreateWalletDto, WalletResponseDto } from './dto/create-wallet.dto';
 import {
   ApiTags,

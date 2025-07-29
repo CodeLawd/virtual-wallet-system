@@ -7,7 +7,7 @@ import {
   HttpStatus,
   UseGuards,
 } from '@nestjs/common';
-import type { WebhooksService } from './webhooks.service';
+import { WebhooksService } from './webhooks.service';
 import {
   ApiTags,
   ApiOperation,

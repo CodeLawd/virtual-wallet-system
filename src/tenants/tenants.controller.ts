@@ -1,5 +1,5 @@
 import { Controller, Post, HttpCode, HttpStatus } from '@nestjs/common';
-import type { TenantsService } from './tenants.service';
+import { TenantsService } from './tenants.service';
 import { CreateTenantDto, TenantResponseDto } from './dto/create-tenant.dto';
 import { ApiTags, ApiOperation, ApiResponse, ApiBody } from '@nestjs/swagger';
 

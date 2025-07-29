@@ -5,6 +5,8 @@ import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { PassportModule } from '@nestjs/passport';
 import { JwtStrategy } from './passport/jwt.strategy';
+import { UsersModule } from '../users/users.module';
+import { TenantsModule } from '../tenants/tenants.module';
 
 @Module({
   controllers: [AuthController],
@@ -19,6 +21,8 @@ import { JwtStrategy } from './passport/jwt.strategy';
       inject: [ConfigService],
     }),
     PassportModule,
+    UsersModule,
+    TenantsModule,
   ],
   exports: [JwtModule],
 })

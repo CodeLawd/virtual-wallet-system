@@ -3,39 +3,32 @@ import {
   NotFoundException,
   InternalServerErrorException,
   Logger,
+  Inject,
+  forwardRef,
 } from '@nestjs/common';
-import type { Repository, DataSource, EntityManager } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository, DataSource, EntityManager } from 'typeorm';
 import { WebhookEventStatus } from '../common/enums';
-import type { TransactionsService } from '../transactions/transactions.service';
-import type { PaymentProvidersService } from '../payment-providers/payment-providers.service';
-import type { QueueService } from '../queue/queue.service';
-import type { VirtualAccountsService } from '../virtual-accounts/virtual-accounts.service'; // Import VirtualAccountsService
+import { TransactionsService } from '../transactions/transactions.service';
+import { PaymentProvidersService } from '../payment-providers/payment-providers.service';
+import { QueueService } from '../queue/queue.service';
+import { VirtualAccountsService } from '../virtual-accounts/virtual-accounts.service'; // Import VirtualAccountsService
 import { WebhookEvent } from './entity/webhook-event.entity';
 
 @Injectable()
 export class WebhooksService {
-  private webhookEventsRepository: Repository<WebhookEvent>;
-  private dataSource: DataSource;
-  private transactionsService: TransactionsService;
-  private paymentProvidersService: PaymentProvidersService;
-  private virtualAccountsService: VirtualAccountsService; // Inject VirtualAccountsService
-  private queueService: QueueService;
   private readonly logger = new Logger(WebhooksService.name);
 
   constructor(
-    transactionsService: TransactionsService,
-    paymentProvidersService: PaymentProvidersService,
-    virtualAccountsService: VirtualAccountsService, // Inject VirtualAccountsService
-    dataSource: DataSource,
-    queueService: QueueService,
-  ) {
-    this.transactionsService = transactionsService;
-    this.paymentProvidersService = paymentProvidersService;
-    this.virtualAccountsService = virtualAccountsService;
-    this.dataSource = dataSource;
-    this.webhookEventsRepository = dataSource.getRepository(WebhookEvent);
-    this.queueService = queueService;
-  }
+    @InjectRepository(WebhookEvent)
+    private readonly webhookEventsRepository: Repository<WebhookEvent>,
+    private readonly transactionsService: TransactionsService,
+    private readonly paymentProvidersService: PaymentProvidersService,
+    private readonly virtualAccountsService: VirtualAccountsService,
+    private readonly dataSource: DataSource,
+    @Inject(forwardRef(() => QueueService))
+    private readonly queueService: QueueService,
+  ) {}
 
   async createWebhookEvent(
     tenantId: string,

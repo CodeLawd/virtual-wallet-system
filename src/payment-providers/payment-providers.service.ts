@@ -1,8 +1,8 @@
 import { Injectable, BadRequestException } from "@nestjs/common"
 import type { IPaymentProvider } from "../common/interfaces/payment-provider.interface"
-import type { PaystackService } from "./paystack/paystack.service"
-import type { FlutterwaveService } from "./flutterwave/flutterwave.service"
-import type { StripeService } from "./stripe/stripe.service"
+import { PaystackService } from "./paystack/paystack.service"
+import { FlutterwaveService } from "./flutterwave/flutterwave.service"
+import { StripeService } from "./stripe/stripe.service"
 
 @Injectable()
 export class PaymentProvidersService {

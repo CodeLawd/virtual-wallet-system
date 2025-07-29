@@ -1,5 +1,5 @@
 import { Controller, Post, UseGuards, HttpStatus } from '@nestjs/common';
-import type { VirtualAccountsService } from './virtual-accounts.service';
+import { VirtualAccountsService } from './virtual-accounts.service';
 import { CreateVirtualAccountDto } from './dto/create-virtual-account.dto';
 
 import {

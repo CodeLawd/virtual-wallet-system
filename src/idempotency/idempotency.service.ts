@@ -3,7 +3,8 @@ import {
   ConflictException,
   InternalServerErrorException,
 } from '@nestjs/common';
-import type { Repository, EntityManager } from 'typeorm'; // Import Repository and EntityManager
+import { InjectEntityManager } from '@nestjs/typeorm';
+import { Repository, EntityManager } from 'typeorm'; // Import Repository and EntityManager
 import type { IdempotencyStatus } from '../common/enums';
 import { PostgresErrorCode } from '../common/constants/postgres-error-codes.enum';
 import { IdempotencyKey } from './entity/idempotency-key.entity';
@@ -12,7 +13,7 @@ import { IdempotencyKey } from './entity/idempotency-key.entity';
 export class IdempotencyService {
   private idempotencyKeysRepository: Repository<IdempotencyKey>;
 
-  constructor(entityManager: EntityManager) {
+  constructor(@InjectEntityManager() entityManager: EntityManager) {
     this.idempotencyKeysRepository =
       entityManager.getRepository(IdempotencyKey);
   }

@@ -3,7 +3,8 @@ import {
   ConflictException,
   NotFoundException,
 } from '@nestjs/common';
-import type { Repository } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 
 import { v4 as uuidv4 } from 'uuid';
 import { PostgresErrorCode } from '../common/constants/postgres-error-codes.enum';
@@ -14,7 +15,7 @@ import { CreateTenantDto, TenantResponseDto } from './dto/create-tenant.dto';
 export class TenantsService {
   private tenantsRepository: Repository<Tenant>; // Inject Tenant repository
 
-  constructor(tenantsRepository: Repository<Tenant>) {
+  constructor(@InjectRepository(Tenant) tenantsRepository: Repository<Tenant>) {
     this.tenantsRepository = tenantsRepository;
   }
 

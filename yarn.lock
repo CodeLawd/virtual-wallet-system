@@ -954,6 +954,19 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@nestjs/cache-manager@npm:^3.0.1":
+  version: 3.0.1
+  resolution: "@nestjs/cache-manager@npm:3.0.1"
+  peerDependencies:
+    "@nestjs/common": ^9.0.0 || ^10.0.0 || ^11.0.0
+    "@nestjs/core": ^9.0.0 || ^10.0.0 || ^11.0.0
+    cache-manager: ">=6"
+    keyv: ">=5"
+    rxjs: ^7.8.1
+  checksum: 10c0/a28bf4a24195f648ccb0dc88a46056003665ff4fdc60454b17f0b9a15fcaa8cb5c1a4fdb49a7bd6b2371ce56382698116c4dfc88c7dd09527b833588582af46a
+  languageName: node
+  linkType: hard
+
 "@nestjs/cli@npm:^10.0.0":
   version: 10.4.9
   resolution: "@nestjs/cli@npm:10.4.9"
@@ -8125,6 +8138,7 @@ __metadata:
   resolution: "virtual-wallet-system@workspace:."
   dependencies:
     "@nestjs/bullmq": "npm:^11.0.3"
+    "@nestjs/cache-manager": "npm:^3.0.1"
     "@nestjs/cli": "npm:^10.0.0"
     "@nestjs/common": "npm:^10.0.0"
     "@nestjs/config": "npm:^4.0.2"

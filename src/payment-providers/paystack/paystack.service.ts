@@ -6,7 +6,7 @@ import type {
   VirtualAccountCreationDetails,
   VirtualAccountResponse,
 } from "../../common/interfaces/payment-provider.interface"
-import type { ConfigService } from "@nestjs/config"
+import { ConfigService } from "@nestjs/config"
 import type { EntityManager } from "typeorm" // Import EntityManager
 
 @Injectable()

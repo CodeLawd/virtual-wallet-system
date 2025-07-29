@@ -1,7 +1,7 @@
 import { Processor, WorkerHost, OnWorkerEvent } from '@nestjs/bullmq';
 import type { Job } from 'bullmq';
 import { Logger } from '@nestjs/common';
-import type { WebhooksService } from '../webhooks/webhooks.service'; // Import WebhooksService
+import { WebhooksService } from '../webhooks/webhooks.service'; // Import WebhooksService
 
 @Processor('webhooks') // This consumer processes jobs from the 'webhooks' queue
 export class WebhooksConsumer extends WorkerHost {

@@ -17,6 +17,7 @@ import { QueueModule } from './queue/queue.module';
 import { BullModule } from '@nestjs/bullmq';
 import { ThrottlerModule } from '@nestjs/throttler';
 import * as redisStore from 'cache-manager-redis-store';
+import { CacheModule } from '@nestjs/cache-manager';
 
 @Module({
   imports: [
@@ -67,13 +68,18 @@ import * as redisStore from 'cache-manager-redis-store';
             limit: configService.get<number>('THROTTLE_LIMIT') || 100,
           },
         ],
-        storage: new (redisStore as any)({
-          // Use Redis for storage
-          url: `redis://${configService.get<string>(
-            'REDIS_HOST',
-          )}:${configService.get<number>('REDIS_PORT')}`,
-          ttl: configService.get<number>('THROTTLE_TTL') || 60,
-        }),
+        storage: redisStore as any,
+      }),
+    }),
+    CacheModule.registerAsync({
+      isGlobal: true,
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => ({
+        store: redisStore,
+        host: configService.get<string>('REDIS_HOST') || 'localhost',
+        port: configService.get<number>('REDIS_PORT') || 6379,
+        ttl: 60, // Default TTL in seconds
       }),
     }),
     UsersModule,

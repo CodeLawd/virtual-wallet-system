@@ -3,9 +3,9 @@ import {
   UnauthorizedException,
   BadRequestException,
 } from '@nestjs/common';
-import type { UsersService } from '../users/users.service';
-import type { TenantsService } from '../tenants/tenants.service';
-import type { JwtService } from '@nestjs/jwt';
+import { UsersService } from '../users/users.service';
+import { TenantsService } from '../tenants/tenants.service';
+import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 
 @Injectable()

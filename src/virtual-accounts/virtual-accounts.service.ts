@@ -4,10 +4,11 @@ import {
   NotFoundException,
   BadRequestException,
 } from '@nestjs/common';
-import type { Repository, EntityManager } from 'typeorm';
+import { InjectEntityManager } from '@nestjs/typeorm';
+import { Repository, EntityManager } from 'typeorm';
 import type { CreateVirtualAccountDto } from './dto/create-virtual-account.dto';
-import type { WalletsService } from '../wallets/wallets.service';
-import type { PaymentProvidersService } from '../payment-providers/payment-providers.service';
+import { WalletsService } from '../wallets/wallets.service';
+import { PaymentProvidersService } from '../payment-providers/payment-providers.service';
 import { PostgresErrorCode } from '../common/constants/postgres-error-codes.enum';
 import { VirtualAccountStatus } from '../common/enums';
 import { VirtualAccount } from './entities/virtual-account.entity';
@@ -18,6 +19,7 @@ export class VirtualAccountsService {
   private virtualAccountsRepository: Repository<VirtualAccount>;
 
   constructor(
+    @InjectEntityManager()
     private entityManager: EntityManager,
     private walletsService: WalletsService,
     private paymentProvidersService: PaymentProvidersService,
